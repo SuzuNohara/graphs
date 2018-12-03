@@ -7,8 +7,11 @@ export interface aristaInterface{
     border: number,
     bgcolor: string,
     value: number,
-    relacion: string[],
-    font: number
+    relacion: number[],
+    font: number,
+    posicion: number,
+    final: number, // 0 no visitada, 1 eliminada, 2 utilizada en arbol final
+    opacidad: number
 }
 
 export class Arista implements aristaInterface{
@@ -20,8 +23,11 @@ export class Arista implements aristaInterface{
     border: number;
     bgcolor: string;
     value: number;
-    relacion: string[];
+    relacion: number[];
     font: number;
+    posicion: number;
+    final: number,
+    opacidad: number;
 
     constructor(){
         this.width = 0;
@@ -34,5 +40,8 @@ export class Arista implements aristaInterface{
         this.value = 0;
         this.relacion = [];
         this.font = 0;
+        this.posicion = 0;
+        this.final = 0;
+        this.opacidad = 1;
     }
 }

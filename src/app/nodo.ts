@@ -8,7 +8,11 @@ export interface nodoInterface{
     value: string,
     font: number,
     padding: number,
-    relaciones: string[];
+    relaciones: number[],
+    relval: number[],
+    posicion: number,
+    visitado: boolean,
+    opacidad: number
 }
 
 export class Nodo implements nodoInterface{
@@ -21,7 +25,11 @@ export class Nodo implements nodoInterface{
     value: string;
     font: number;
     padding: number;
-    relaciones: string[];
+    relaciones: number[];
+    relval: number[];
+    posicion: number;
+    visitado: boolean;
+    opacidad: number;
 
     constructor(){
         this.size = 0;
@@ -34,5 +42,9 @@ export class Nodo implements nodoInterface{
         this.font = 0;
         this.padding = 0;
         this.relaciones = [];
+        this.relval = []; 
+        this.posicion = 0;
+        this.visitado = false;
+        this.opacidad = 1;
     }
 }

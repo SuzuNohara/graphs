@@ -1,12 +1,12 @@
 <div class="background"></div>
 <nav class="navbar">
   <a class="navbar-brand">Graphs</a>
-    <input class="form-control fomulario" type="number" placeholder="Nodos" [(ngModel)]="NNodos">
+    <input class="form-control fomulario" type="number" placeholder="Nodos" [(ngModel)]="NNodos" [ngStyle]="{'disabled': acciones == 'Resolver'}">
     <select [(ngModel)]="algoritmo" class="form-control fomulario">
       <option value="prim">Prim</option>
       <option value="kruskal">Kruskal</option>
     </select>
-    <button class="btn btn-outline-dark fomulario" (click)="generar()">Generar</button>
+    <button class="btn btn-outline-dark fomulario" (click)="generar()">{{ accion }}</button>
 </nav>
 
 <div class="nodo" *ngFor="let nodo of nodos; index as i" [ngStyle]="{
@@ -18,8 +18,9 @@
   'border-width': nodo.border + 'vw',
   'background-color': nodo.bgcolor,
   'font-size': nodo.font + 'vw',
-  'padding': nodo.padding + 'vw'
-  }" id="{{ nodo.value }}">
+  'padding': nodo.padding + 'vw',
+  'opacity': nodo.opacidad
+  }" id="nodo.value" (mouseover)="blurAll(nodo.posicion)" (mouseout)="restoreAll()">
   {{ nodo.value }}
 </div>
 
@@ -32,7 +33,8 @@
   'border-width': arista.border + 'vw',
   'background-color': arista.bgcolor,
   'font-size': arista.font + 'vw',
-  'transform-origin': '0 0'
+  'transform-origin': '0 0',
+  'opacity': arista.opacidad
   }">
   {{ arista.value }}
 </div>
