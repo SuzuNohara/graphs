@@ -26,7 +26,7 @@ export class Arista implements aristaInterface{
     relacion: number[];
     font: number;
     posicion: number;
-    final: number,
+    final: number;
     opacidad: number;
 
     constructor(){
