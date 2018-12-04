@@ -23,13 +23,14 @@ export class AppComponent {
     this.NNodos = 3;
     this.nodos = [];
     this.aristas = [];
-    this.log = "<h4>Acciones:</h4>";
+    this.log = "";
     this.algoritmo = "prim";
     this.accion = "Generar";
     this.velocidad = 1000;
   }
 
   generar(){
+    this.log = "";
     if(this.nodos.length > 0 || this.aristas.length > 0){
       this.nodos = [];
       this.aristas = [];
@@ -117,6 +118,7 @@ export class AppComponent {
     }
   }
 
+
   async prim(){
     let arista: number;
     this.nodos[0].visitado = true;
@@ -126,9 +128,10 @@ export class AppComponent {
       this.aristas[arista].final = 2;
       this.nodos[this.aristas[arista].relacion[0]].visitado = true;
       this.nodos[this.aristas[arista].relacion[1]].visitado = true;
+      this.log = "<p>Rama minima encontrada: " + this.nodos[this.aristas[arista].relacion[0]].value + " - " + this.nodos[this.aristas[arista].relacion[1]].value + "; valor: " + this.aristas[arista].value + "</p>" + this.log;
       await this.delay(this.velocidad);
     }
-    alert("Diagrama de nodos resuelto!");
+    this.log = "<h3>Arbol mínimo encontrado. Peso = " + this.pesoArbol() + "</h3>" + this.log;
   }
 
   minAristaConnected(): number{
@@ -146,6 +149,14 @@ export class AppComponent {
           }
         }
       }
+    }
+    return retorno;
+  }
+
+  pesoArbol(): number{
+    let retorno: number = 0;
+    for(let i = 0; i < this.aristas.length; i++){
+      retorno += this.aristas[i].final == 2? this.aristas[i].value: 0;
     }
     return retorno;
   }
@@ -187,6 +198,17 @@ export class AppComponent {
     }
     for(let i = 0; i < this.aristas.length; i++){
       if(this.aristas[i].relacion[0] != posicion && this.aristas[i].relacion[1] != posicion){
+        this.aristas[i].opacidad = 0.1;
+      }
+    }
+  }
+
+  blurDiagram(){
+    if(this.log != ""){
+      for(let i = 0; i < this.nodos.length; i++){
+        this.nodos[i].opacidad = 0.1;
+      }
+      for(let i = 0; i < this.aristas.length; i++){
         this.aristas[i].opacidad = 0.1;
       }
     }

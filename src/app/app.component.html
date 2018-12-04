@@ -11,6 +11,8 @@
     <button class="btn btn-outline-dark fomulario" (click)="resolver()">RESOLVER</button>
 </nav>
 
+<div class="log" [innerHtml]="log" (mouseover)="blurDiagram()" (mouseout)="restoreAll()"></div>
+
 <div class="nodo" *ngFor="let nodo of nodos; index as i" [ngStyle]="{
   'width': nodo.size + 'vw',
   'height': nodo.size + 'vw',

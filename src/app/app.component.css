@@ -56,3 +56,15 @@
     border-radius: 0.5vw;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black
 }
+
+.log{
+    position: absolute;
+    top: 10vh;
+    left: 30vw;
+    width: 40vw;
+    overflow-x: hidden;
+    color: rgb(32,194,14,0.5);
+    text-align: center;
+    padding-top: 2vw;
+    z-index: 5;
+}
