@@ -1,12 +1,12 @@
 <div class="background"></div>
 <nav class="navbar">
   <a class="navbar-brand">Graphs</a>
-    <input class="form-control fomulario" type="number" placeholder="Nodos" [(ngModel)]="NNodos">
+    <input class="form-control fomulario" type="number" placeholder="Nodos" [(ngModel)]="NNodos" [ngStyle]="{'disabled': acciones == 'Resolver'}">
     <select [(ngModel)]="algoritmo" class="form-control fomulario">
       <option value="prim">Prim</option>
       <option value="kruskal">Kruskal</option>
     </select>
-    <button class="btn btn-outline-dark fomulario" (click)="generar()">Generar</button>
+    <button class="btn btn-outline-dark fomulario" (click)="generar()">{{ accion }}</button>
 </nav>
 
 <div class="nodo" *ngFor="let nodo of nodos; index as i" [ngStyle]="{
@@ -19,7 +19,7 @@
   'background-color': nodo.bgcolor,
   'font-size': nodo.font + 'vw',
   'padding': nodo.padding + 'vw'
-  }" id="{{ nodo.value }}">
+  }" id="nodo.value" (mouseover)="blurAll()" (mouseout)="restoreAll()">
   {{ nodo.value }}
 </div>
 
