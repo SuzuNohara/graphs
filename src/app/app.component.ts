@@ -161,15 +161,90 @@ export class AppComponent {
     return retorno;
   }
 
-  kruskal(){
+  async kruskal(){
     let arista: number;
-    while(!this.resuelto()){
-      arista = this.minimaArista();
-      this.aristas[arista].final = 2;
-      if(this.comprobarCiclos()){
-        this.aristas[arista].final = 1;
+    let menor: number = 0;
+    let posicion: number;
+    while(!this.resueltoK()){
+      menor = 0;
+      posicion = 0;
+      for(let i = 0; i < this.aristas.length; i++){
+        if(menor == 0 && this.aristas[i].final == 0){
+          menor = this.aristas[i].value;
+          posicion = this.aristas[i].posicion;
+        }else if(menor > this.aristas[i].value && this.aristas[i].final == 0){
+          menor = this.aristas[i].value;
+          posicion = this.aristas[i].posicion;
+        }
+      }
+      this.log = "<p>Arista menor encontrada en " + this.aristas[posicion].relacion[0] + " - " + this.aristas[posicion].relacion[0] + "; valor = " + this.aristas[posicion].value + "</p>" + this.log;
+      this.aristas[posicion].bgcolor = 'rgb(32,194,14,0.5)';
+      this.aristas[posicion].final = 2;
+      await this.delay(this.velocidad);
+      if(this.bucles()){
+        this.log = "<p>La arista " + this.aristas[posicion].relacion[0] + " - " + this.aristas[posicion].relacion[0] + " genera bucles, eliminando...</p>" + this.log;
+        this.aristas[posicion].bgcolor = 'rgb(0,0,0,0.5)';
+        this.aristas[posicion].final = 1;
+        await this.delay(this.velocidad);
       }
     }
+  }
+
+  resueltoK(){
+    let retorno: boolean = true;
+    if(this.bucles()){
+      retorno = false;
+    }else{
+      if(this.recorridoK([], 0) == this.nodos.length){
+        retorno = true;
+      }else{
+        retorno = false;
+      }
+    }
+    return retorno;
+  }
+
+  bucles(): boolean{
+    let retorno: boolean = false;
+    for(let i: number = 0; i < this.nodos.length; i++){
+      retorno = retorno || this.buc([], this.nodos[i].posicion);
+    }
+    return retorno;
+  }
+
+  buc(anteriores: number[], actual: number): boolean{
+    let retorno: boolean = false;
+    for(let ant of anteriores){
+      retorno =  retorno || ant == actual;
+    }
+    if(!retorno){
+      for(let i = 0; i < this.aristas.length; i++){
+        if((this.aristas[i].relacion[0] == actual || this.aristas[i].relacion[1] == actual)){
+          if(anteriores.length == 0 || (this.aristas[i].relacion[0] != anteriores[anteriores.length - 1] && this.aristas[i].relacion[1] != anteriores[anteriores.length - 1])){
+            if(this.aristas[i].final == 2){
+              anteriores.push(actual);
+              retorno = retorno || this.buc(anteriores, this.aristas[i].relacion[0] == actual ? this.aristas[i].relacion[1]: this.aristas[i].relacion[0]);
+            }
+          }
+        }
+      }
+    }
+    return retorno;
+  }
+
+  recorridoK(anteriores: number[], actual): number{
+    let sum: number = 1;
+    for(let i = 0; i < this.aristas.length; i++){
+      if((this.aristas[i].relacion[0] == actual || this.aristas[i].relacion[1] == actual)){
+        if(anteriores.length == 0 || (this.aristas[i].relacion[0] != anteriores[anteriores.length - 1] && this.aristas[i].relacion[1] != anteriores[anteriores.length - 1])){
+          if(this.aristas[i].final == 2){
+            anteriores.push(actual);
+            sum += this.recorridoK(anteriores, this.aristas[i].relacion[0] == actual ? this.aristas[i].relacion[1]: this.aristas[i].relacion[0]);
+          }
+        }
+      }
+    }
+    return sum;
   }
 
   resuelto(): boolean{
