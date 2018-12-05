@@ -177,17 +177,18 @@ export class AppComponent {
           posicion = this.aristas[i].posicion;
         }
       }
-      this.log = "<p>Arista menor encontrada en " + this.aristas[posicion].relacion[0] + " - " + this.aristas[posicion].relacion[0] + "; valor = " + this.aristas[posicion].value + "</p>" + this.log;
+      this.log = "<p>Arista menor encontrada en " + this.aristas[posicion].relacion[0] + " - " + this.aristas[posicion].relacion[1] + "; valor = " + this.aristas[posicion].value + "</p>" + this.log;
       this.aristas[posicion].bgcolor = 'rgb(32,194,14,0.5)';
       this.aristas[posicion].final = 2;
       await this.delay(this.velocidad);
       if(this.bucles()){
-        this.log = "<p>La arista " + this.aristas[posicion].relacion[0] + " - " + this.aristas[posicion].relacion[0] + " genera bucles, eliminando...</p>" + this.log;
+        this.log = "<p>La arista " + this.aristas[posicion].relacion[0] + " - " + this.aristas[posicion].relacion[1] + " genera bucles, eliminando...</p>" + this.log;
         this.aristas[posicion].bgcolor = 'rgb(0,0,0,0.5)';
         this.aristas[posicion].final = 1;
         await this.delay(this.velocidad);
       }
     }
+    this.log = "<h3>Arbol mínimo encontrado. Peso = " + this.pesoArbol() + "</h3>" + this.log;
   }
 
   resueltoK(){
@@ -195,13 +196,19 @@ export class AppComponent {
     if(this.bucles()){
       retorno = false;
     }else{
-      if(this.recorridoK([], 0) == this.nodos.length){
+      let ari: number = 0;
+      for(let i = 0; i < this.aristas.length; i++){
+        if(this.aristas[i].final == 0){
+          return false;
+        }
+      }
+      /*if(this.recorridoK([], 0) >= this.nodos.length){
         retorno = true;
       }else{
         retorno = false;
-      }
+      }*/
     }
-    return retorno;
+    return retorno;    
   }
 
   bucles(): boolean{
@@ -214,16 +221,35 @@ export class AppComponent {
 
   buc(anteriores: number[], actual: number): boolean{
     let retorno: boolean = false;
+    console.log("actual: " + actual);
+    console.log("anteriores: " + anteriores.join(","));
     for(let ant of anteriores){
-      retorno =  retorno || ant == actual;
+      if(ant == actual){
+        retorno = true;
+        console.log("bucle");
+      }
     }
     if(!retorno){
       for(let i = 0; i < this.aristas.length; i++){
         if((this.aristas[i].relacion[0] == actual || this.aristas[i].relacion[1] == actual)){
-          if(anteriores.length == 0 || (this.aristas[i].relacion[0] != anteriores[anteriores.length - 1] && this.aristas[i].relacion[1] != anteriores[anteriores.length - 1])){
-            if(this.aristas[i].final == 2){
+          if(this.aristas[i].final == 2){
+            console.log("Arista " + this.aristas[i].relacion[0] + " - " + this.aristas[i].relacion[1]);
+            if(anteriores.length == 0){
               anteriores.push(actual);
-              retorno = retorno || this.buc(anteriores, this.aristas[i].relacion[0] == actual ? this.aristas[i].relacion[1]: this.aristas[i].relacion[0]);
+              let ant: number[] = [];
+              for(let ante of anteriores){
+                ant.push(ante);
+              }
+              retorno = retorno || this.buc(ant, this.aristas[i].relacion[0] == actual ? this.aristas[i].relacion[1]: this.aristas[i].relacion[0]);
+              console.log("Camino " + this.aristas[i].relacion[0] + " - " + this.aristas[i].relacion[1]);
+            }else if(this.aristas[i].relacion[0] != anteriores[anteriores.length - 1] && this.aristas[i].relacion[1] != anteriores[anteriores.length - 1]){
+              anteriores.push(actual);
+              let ant: number[] = [];
+              for(let ante of anteriores){
+                ant.push(ante);
+              }
+              retorno = retorno || this.buc(ant, this.aristas[i].relacion[0] == actual ? this.aristas[i].relacion[1]: this.aristas[i].relacion[0]);
+              console.log("Camino " + this.aristas[i].relacion[0] + " - " + this.aristas[i].relacion[1]);
             }
           }
         }
@@ -239,7 +265,11 @@ export class AppComponent {
         if(anteriores.length == 0 || (this.aristas[i].relacion[0] != anteriores[anteriores.length - 1] && this.aristas[i].relacion[1] != anteriores[anteriores.length - 1])){
           if(this.aristas[i].final == 2){
             anteriores.push(actual);
-            sum += this.recorridoK(anteriores, this.aristas[i].relacion[0] == actual ? this.aristas[i].relacion[1]: this.aristas[i].relacion[0]);
+            let ant: number[] = [];
+            for(let ante of anteriores){
+              ant.push(ante);
+            }
+            sum += this.recorridoK(ant, this.aristas[i].relacion[0] == actual ? this.aristas[i].relacion[1]: this.aristas[i].relacion[0]);
           }
         }
       }
